@@ -10,6 +10,7 @@ public class Question {
     private String input;
     private String output;
     private String stub;
+    private String id;
 
     public String getStub() {
         return stub;
@@ -25,5 +26,13 @@ public class Question {
 
     public String getStatement() {
         return statement;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

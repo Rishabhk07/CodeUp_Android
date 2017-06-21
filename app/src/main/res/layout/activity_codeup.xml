@@ -19,13 +19,13 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="50dp">
+            android:layout_marginBottom="60dp">
 
 
             <com.codingblocks.codeup.Editor
                 android:id="@+id/editor"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="320dp"
                 android:paddingLeft="60dp"
                 android:gravity="top" />
 
@@ -39,6 +39,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_question_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Question"
@@ -73,7 +74,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:orientation="vertical"
             android:layout_alignParentBottom="true">
 
@@ -84,6 +85,8 @@
                 android:layout_alignParentTop="true"/>
 
             <Button
+                android:onClick="submitClicked"
+                android:id="@+id/btn_submit"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="20dp"

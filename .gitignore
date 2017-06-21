@@ -109,5 +109,8 @@ freeline.py
 freeline/
 freeline_project_description.json
 
+/build.gradle
+/gradle/wrapper/gradle=-wrapper.properties
+
 
 
