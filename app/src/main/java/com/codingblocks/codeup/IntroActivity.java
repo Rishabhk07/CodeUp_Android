@@ -23,7 +23,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by the-dagger on 21/06/17.
@@ -35,6 +38,7 @@ public class IntroActivity extends AppIntro implements GoogleApiClient.OnConnect
     GoogleApiClient mGoogleApiClient;
     GoogleSignInOptions gso;
     FirebaseAuth firebaseAuth;
+    DatabaseReference firebaseDatabaseReference;
 
 
     @Override
@@ -47,6 +51,7 @@ public class IntroActivity extends AppIntro implements GoogleApiClient.OnConnect
         addSlide(AppIntroFragment.newInstance("CodeUp!", "Compete with your friends with dedicated Social Login", R.drawable.ic_intro_git, getResources().getColor(R.color.introBlue)));
         addSlide(AppIntroFragment.newInstance("CodeUp!", "Hope that hyped you up, press the start button to get started!", R.drawable.ic_intro_done, getResources().getColor(R.color.introPurple)));
         firebaseAuth = FirebaseAuth.getInstance();
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.google_key))
                 .requestEmail()
@@ -56,6 +61,12 @@ public class IntroActivity extends AppIntro implements GoogleApiClient.OnConnect
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -71,7 +82,7 @@ public class IntroActivity extends AppIntro implements GoogleApiClient.OnConnect
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -79,10 +90,16 @@ public class IntroActivity extends AppIntro implements GoogleApiClient.OnConnect
                         if (task.isSuccessful()) {
                             Toast.makeText(IntroActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
+                            firebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            User currentUser = new User(firebaseUser.getUid(),
+                                    firebaseUser.getDisplayName(),
+                                    firebaseUser.getEmail(),
+                                    String.valueOf(firebaseUser.getPhotoUrl()));
+                            firebaseDatabaseReference.child("users").child(firebaseUser.getUid()).setValue(currentUser);
                             finish();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
