@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.codingblocks.codeup.match.*;
 import com.codingblocks.codeup.match.User;
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout root;
     @BindView(R.id.profileImage)
     CircleImageView profileImage;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.progress_text)
+    TextView progressText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public void startClicked(View view) {
 
         findMatch();
-        startActivity(new Intent(this, CodeupActivity.class));
+
     }
 
     @Override
@@ -105,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void findMatch() {
+
+
+        progressBar.setVisibility(View.VISIBLE);
+        progressText.setText("Finding match");
 
         final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -145,13 +159,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createMatch() {
+
+        progressText.setText("Creating new match");
+
         final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.getReference("matches").push().child("user1").setValue(new User(uid));
+        database.getReference("matches").push().child("user1").setValue(new User(uid), new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                progressText.setText("Finding another player");
+            }
+        });
     }
 
     private void startContest(String matchid) {
-
+        Intent intent =new Intent(this, CodeupActivity.class);
+        intent.putExtra("match_id",matchid);
+        startActivity(new Intent(this, CodeupActivity.class));
     }
 }
