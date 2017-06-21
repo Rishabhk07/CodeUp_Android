@@ -25,6 +25,9 @@
 
         <activity android:name=".CodeupActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ScoreActivity" />
+
     </application>
 
 </manifest>

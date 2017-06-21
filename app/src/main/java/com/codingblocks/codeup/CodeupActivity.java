@@ -1,5 +1,6 @@
 package com.codingblocks.codeup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -99,6 +100,9 @@ public class CodeupActivity extends AppCompatActivity {
     public void submitClicked(View v) {
         if (currentQuestion >= contestQuestions.size() -1 ){
             //questions finished
+            Intent intent = new Intent(this, ScoreActivity.class);
+            intent.putExtra("match_id","sjhsh");
+            startActivity(intent);
             return;
         }
         this.currentQuestion++;
