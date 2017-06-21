@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codingblocks.codeup.match.MatchQuestion;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,11 +38,14 @@ public class CodeupActivity extends AppCompatActivity {
     List<Question> contestQuestions = new ArrayList<>();
     int currentQuestion = 0;
 
+    List<MatchQuestion> answeredQuestions = new ArrayList<>();
+    String matchid;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codeup);
-
+        matchid = getIntent().getStringExtra("match_id");
         editor = (Editor) findViewById(R.id.editor);
         tvTitle = (TextView) findViewById(R.id.tv_question_title);
         tvNumber = (TextView)findViewById(R.id.tv_question_number);
@@ -98,14 +103,58 @@ public class CodeupActivity extends AppCompatActivity {
     }
 
     public void submitClicked(View v) {
-        if (currentQuestion >= contestQuestions.size() -1 ){
+
+        MatchQuestion matchQuestion =new MatchQuestion(editor.getText().toString());
+        submitQuestion(matchQuestion);
+
+        if (currentQuestion >= contestQuestions.size() - 1 ){
             //questions finished
             Intent intent = new Intent(this, ScoreActivity.class);
-            intent.putExtra("match_id","sjhsh");
+            intent.putExtra("match_id",matchid);
             startActivity(intent);
             return;
         }
+
         this.currentQuestion++;
         showQuestion();
+    }
+
+    private void submitQuestion(final MatchQuestion matchQuestion) {
+
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference ref = database.getReference("matches").child(matchid);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+
+                while (iterator.hasNext()){
+                    DataSnapshot snapshot = iterator.next();
+                    if (snapshot.child("id").getValue(String.class).equals(uid)) {
+                        switch (currentQuestion) {
+                            case 0:
+                                snapshot.getRef().child("q1").setValue(matchQuestion);
+                                break;
+                            case 1:
+                                snapshot.getRef().child("q2").setValue(matchQuestion);
+                                break;
+                            case 3:
+                                snapshot.getRef().child("q3").setValue(matchQuestion);
+                                break;
+                        }
+                        return;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
