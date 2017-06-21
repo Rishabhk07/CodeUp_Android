@@ -16,10 +16,8 @@ public class User {
     private Question q3;
 
     public User(String id, Question q1, Question q2, Question q3) {
+    public User(String id) {
         this.id =id;
-        this.q1 = q1;
-        this.q2= q2;
-        this.q3 = q3;
 
     }
 }

@@ -104,7 +104,7 @@ public class CodeupActivity extends AppCompatActivity {
 
     public void submitClicked(View v) {
 
-        MatchQuestion matchQuestion =new MatchQuestion(editor.getText().toString());
+        MatchQuestion matchQuestion =new MatchQuestion(editor.getText().toString(), contestQuestions.get(currentQuestion).getId());
         submitQuestion(matchQuestion);
 
         if (currentQuestion >= contestQuestions.size() - 1 ){
