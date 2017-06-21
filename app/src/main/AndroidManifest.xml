@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CodeupActivity"/>
+        <activity android:name=".CodeupActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
