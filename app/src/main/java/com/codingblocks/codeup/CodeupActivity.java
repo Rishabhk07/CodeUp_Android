@@ -1,5 +1,6 @@
 package com.codingblocks.codeup;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,6 +42,8 @@ public class CodeupActivity extends AppCompatActivity {
     List<MatchQuestion> answeredQuestions = new ArrayList<>();
     String matchid;
 
+    ProgressDialog pDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +55,7 @@ public class CodeupActivity extends AppCompatActivity {
         codelayout = findViewById(R.id.code_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         submit = (Button) findViewById(R.id.btn_submit);
-
+        pDialog = new ProgressDialog(this);
         fetchQuestions();
     }
 
@@ -107,22 +110,15 @@ public class CodeupActivity extends AppCompatActivity {
         MatchQuestion matchQuestion =new MatchQuestion(editor.getText().toString(), contestQuestions.get(currentQuestion).getId());
         submitQuestion(matchQuestion);
 
-        if (currentQuestion >= contestQuestions.size() - 1 ){
-            //questions finished
-            Intent intent = new Intent(this, ScoreActivity.class);
-            intent.putExtra("match_id",matchid);
-            startActivity(intent);
-            return;
-        }
 
-        this.currentQuestion++;
-        showQuestion();
+
     }
 
     private void submitQuestion(final MatchQuestion matchQuestion) {
 
         final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        pDialog.setMessage("Submitting");
+        pDialog.show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference ref = database.getReference("matches").child(matchid);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -136,18 +132,19 @@ public class CodeupActivity extends AppCompatActivity {
                     if (snapshot.child("id").getValue(String.class).equals(uid)) {
                         switch (currentQuestion) {
                             case 0:
-                                snapshot.getRef().child("q1").setValue(matchQuestion);
+                                setQuestion(matchQuestion, snapshot.getRef().child("q1"));
                                 break;
                             case 1:
-                                snapshot.getRef().child("q2").setValue(matchQuestion);
+                                setQuestion(matchQuestion, snapshot.getRef().child("q2"));
                                 break;
-                            case 3:
-                                snapshot.getRef().child("q3").setValue(matchQuestion);
+                            case 2:
+                                setQuestion(matchQuestion, snapshot.getRef().child("q3"));
                                 break;
                         }
                         return;
                     }
                 }
+
 
             }
 
@@ -156,5 +153,26 @@ public class CodeupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setQuestion(MatchQuestion matchQuestion, DatabaseReference ref) {
+        ref.setValue(matchQuestion, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                if (currentQuestion >= contestQuestions.size() - 1 ){
+                    //questions finished
+                    Intent intent = new Intent(CodeupActivity.this, ScoreActivity.class);
+                    intent.putExtra("match_id",matchid);
+                    startActivity(intent);
+                    return;
+                }
+
+                pDialog.hide();
+                currentQuestion++;
+                showQuestion();
+            }
+        });
+
     }
 }

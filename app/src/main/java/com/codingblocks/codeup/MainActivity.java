@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.codingblocks.codeup.match.*;
 import com.codingblocks.codeup.match.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,11 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.Iterator;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -176,6 +173,6 @@ public class MainActivity extends AppCompatActivity {
     private void startContest(String matchid) {
         Intent intent =new Intent(this, CodeupActivity.class);
         intent.putExtra("match_id",matchid);
-        startActivity(new Intent(this, CodeupActivity.class));
+        startActivity(intent);
     }
 }

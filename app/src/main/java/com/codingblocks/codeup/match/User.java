@@ -1,7 +1,5 @@
 package com.codingblocks.codeup.match;
 
-import com.codingblocks.codeup.Question;
-
 /**
  * Created by naman on 21/6/17.
  */
@@ -13,7 +11,14 @@ public class User {
 
     public User(String id) {
         this.id =id;
+    }
 
+    public int getTotal() {
+        return total;
+    }
+
+    public String getId() {
+        return id;
     }
 }
 
