@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CodeUp</string>
+    <string name="app_intro">intro</string>
+    <string name="google_key">1055474616849-h66tibl5ko53b79em2oilv9gssbpsoqs.apps.googleusercontent.com</string>
 </resources>

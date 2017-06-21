@@ -17,6 +17,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".IntroActivity"
+            android:theme="@style/IntroTheme"
+            android:label="@string/app_intro" />
+
+
         <activity android:name=".CodeupActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
