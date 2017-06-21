@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -30,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
                     final Intent i = new Intent(MainActivity.this, IntroActivity.class);
 
                     runOnUiThread(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             startActivity(i);
                         }
                     });
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         t.start();
     }
 
-    public void startClicked(View view){
+    public void startClicked(View view) {
         startActivity(new Intent(this, CodeupActivity.class));
     }
 }
