@@ -1,32 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+    <include layout="@layout/content_main"></include>
 
-    <Button
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/startButton"
-        android:text="Start"
-        android:layout_weight="4"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/onlineUsers"
-        android:layout_weight="1"/>
-
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:onClick="startClicked"/>
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-</LinearLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="enterAlwaysCollapsed"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profileImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="#fff"
+                app:civ_border_width="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="Home"
+                android:textColor="#fff"
+                android:textSize="@dimen/customTitle" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>
